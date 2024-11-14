@@ -2,19 +2,13 @@ import { OpenAI } from "openai";
 import { getPartInformation } from "./get-part-information";
 import { getAppliancePartsInformation } from "./get_appliance_parts_info";
 
-// Add these interfaces above the handleFunctionCall function
 interface PartInformationArgs {
     part_identifier: string;
-    // Add other specific properties that getPartInformation expects
 }
 
 interface AppliancePartsInfoArgs {
     input: string;
-    // Add other specific properties that getAppliancePartsInformation expects
 }
-
-// Create a union type for all possible function arguments
-type FunctionArgs = PartInformationArgs | AppliancePartsInfoArgs;
 
 // Create a type for the function map
 type FunctionMapType = {
