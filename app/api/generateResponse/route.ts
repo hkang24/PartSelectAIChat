@@ -2,6 +2,32 @@ import { OpenAI } from "openai";
 import { getPartInformation } from "./get-part-information";
 import { getAppliancePartsInformation } from "./get_appliance_parts_info";
 
+// Add these interfaces above the handleFunctionCall function
+interface PartInformationArgs {
+    part_identifier: string;
+    // Add other specific properties that getPartInformation expects
+}
+
+interface AppliancePartsInfoArgs {
+    input: string;
+    // Add other specific properties that getAppliancePartsInformation expects
+}
+
+// Create a union type for all possible function arguments
+type FunctionArgs = PartInformationArgs | AppliancePartsInfoArgs;
+
+// Create a type for the function map
+type FunctionMapType = {
+    get_part_information: (args: PartInformationArgs) => Promise<unknown>;
+    get_appliance_parts_info: (args: AppliancePartsInfoArgs) => Promise<unknown>;
+};
+
+// Update the functionMap with the proper types
+const functionMap: FunctionMapType = {
+    get_part_information: getPartInformation,
+    get_appliance_parts_info: getAppliancePartsInformation,
+};
+
 // handles the generation of the agent response
 export async function POST(req: Request) {
     const body = await req.json();
@@ -94,13 +120,8 @@ async function handleFunctionCall(toolCall: { function: { name: string, argument
     console.log("functionName: ", functionName);
     console.log("args: ", args);
     
-    const functionMap: Record<string, (args: any) => Promise<any>> = {
-        get_part_information: getPartInformation,
-        get_appliance_parts_info: getAppliancePartsInformation,
-    };
-
     if (functionName in functionMap) {
-        return await functionMap[functionName](args);
+        return await functionMap[functionName as keyof FunctionMapType](args);
     }
     
     throw new Error(`Function ${functionName} not implemented`);
