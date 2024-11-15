@@ -52,7 +52,7 @@ export default function ChatInput({
       />
       <Button
         variant="ghost"
-        className={`bg-[#398584] text-white rounded-full h-8 w-8 mr-1 mb-[4px]`}
+        className={`bg-[#398584] text-white rounded-full h-8 w-8 mr-1 mb-[2px]`}
         disabled={input.length === 0 || isPending}
         onClick={() => generateResponse()}
       >

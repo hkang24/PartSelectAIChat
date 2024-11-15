@@ -89,7 +89,13 @@ export async function POST(req: Request) {
         
         
         if ('text' in assistantResponse) {
-            const cleanedResponse = assistantResponse.text.value.replace(/<\/?div>/g, '');
+            const cleanedResponse = assistantResponse.text.value
+                .replace(/<\/?div>/g, '') // Remove any existing div tags
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Replace ** with <strong> tags
+                .split(/\n\n+/) // Split on multiple newlines
+                .map(block => `<p>${block.trim()}</p>`) // Wrap each block in p tags
+                .join('');
+            
             console.log(cleanedResponse)
             return new Response(JSON.stringify({
                 message: cleanedResponse,
