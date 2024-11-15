@@ -62,6 +62,7 @@ export async function POST(req: Request) {
                         // Here you would implement the actual function calling logic
                         const result = await handleFunctionCall(toolCall);
                         // const result = "test";
+                        console.log("result: ", result);
 
                         return {
                             tool_call_id: toolCall.id,
